@@ -16,9 +16,11 @@ public class CommandsModule : ModuleBase<SocketCommandContext>
 	[Summary("Help menu")]
 	public async Task HelpAsync()
 	{
+		var client = Context.Client;
+
 		var embed = new EmbedBuilder();
-		embed.Title = "Bot";
-		embed.Description = "help\nping\nbotinfo\nsay\nwsay\ndice\nserverinfo\ntag\ntaglist\ntagadd\ntagremove\ndataremove";
+		embed.Title = $"{client.CurrentUser.Username}";
+		embed.Description = "help\nping\nbotinfo\nserverinfo\nsay\nwsay\ndice\ntag\ntaglist\ntagadd\ntagremove\ndataremove";
 		embed.Color = new Color(0, 150, 255);
 		embed.WithFooter(footer => footer.Text = $"{Context.User.Username} | {DateTimeOffset.UtcNow.ToString("g")}");
 		embed.WithCurrentTimestamp();
@@ -45,15 +47,42 @@ public class CommandsModule : ModuleBase<SocketCommandContext>
 			.AddField("Discord User ID", client.CurrentUser.Id, true)
 			.AddField("Status", client.Status, true)
 			.AddField("Library", "Discord.Net", true)
+			.AddField("Invite the Bot", $"https://discord.com/api/oauth2/authorize?client_id={client.CurrentUser.Id}&permissions=0&integration_type=0&scope=bot+applications.commands", true)
 			.AddField("Source Code", "https://codeberg.org/MatthewsDevelopment/CSharpDiscordBot", true);
 		await ReplyAsync(embed: embed.Build());
 	}
 
+	[Command("serverinfo")]
+	[Summary("Displays information about the current Discord server.")]
+	public async Task ServerInfoAsync()
+	{
+		var guild = Context.Guild;
+
+		var embed = new EmbedBuilder()
+			.WithTitle($"🏛️ Server Information")
+			.WithThumbnailUrl(guild.IconUrl)
+			.WithColor(Color.Blue)
+			.AddField("Guild name", guild.Name, true)
+			.AddField("Guild ID", guild.Id, true)
+			.AddField("Members count", guild.MemberCount, true)
+			.AddField("Owner", guild.Owner.Username, true)
+			.AddField("Region", guild.VoiceRegionId, true)
+			.WithFooter(footer => footer.Text = $"Guild creation date: {guild.CreatedAt.ToString("g")}");
+		await ReplyAsync(embed: embed.Build());
+	}
+
+	[Command("helloworld")]
+	[Summary("Hello World!")]
+	public async Task HelloWorldAsync()
+	{
+		await ReplyAsync("Hello World!.");
+	}
+
 	[Command("say")]
 	[Summary("Make me say things")]
-	public async Task SayAsync([Remainder] string text)
+	public async Task SayAsync([Remainder] string message)
 	{
-		await ReplyAsync(text);
+		await ReplyAsync(message);
 		await Context.Message.DeleteAsync();
 	}
 
@@ -88,7 +117,7 @@ public class CommandsModule : ModuleBase<SocketCommandContext>
         }
         catch (Exception ex)
         {
-            await ReplyAsync($"❌ An error has occurred while trying to send the webhook: `{ex.Message}`");
+            await ReplyAsync($"ERROR: `{ex.Message}`");
 		}
     }
 
@@ -102,26 +131,7 @@ public class CommandsModule : ModuleBase<SocketCommandContext>
 	{
 		var random = new Random();
 		int result = random.Next(1, 7);
-		await ReplyAsync($"🎲 You rolled a **{result}**!");
-	}
-	
-	[Command("serverinfo")]
-	[Summary("Displays information about the current Discord server.")]
-	public async Task ServerInfoAsync()
-	{
-		var guild = Context.Guild;
-
-		var embed = new EmbedBuilder()
-			.WithTitle($"🏛️ Server Information")
-			.WithThumbnailUrl(guild.IconUrl)
-			.WithColor(Color.Blue)
-			.AddField("Guild name", guild.Name, true)
-			.AddField("Guild ID", guild.Id, true)
-			.AddField("Member Count", guild.MemberCount, true)
-			.AddField("Owner", guild.Owner.Username, true)
-			.AddField("Region", guild.VoiceRegionId, true)
-			.WithFooter(footer => footer.Text = $"Guild creation date: {guild.CreatedAt.ToString("g")}");
-		await ReplyAsync(embed: embed.Build());
+		await ReplyAsync($"🎲 You rolled a: **{result}**! 🎲");
 	}
 
 
@@ -198,7 +208,7 @@ public class CommandsModule : ModuleBase<SocketCommandContext>
 
 		if (guildTags.ContainsKey(key))
 		{
-			await ReplyAsync($"❌ Tag `{tagName}` already exists! Use `!tagdelete` first.");
+			await ReplyAsync($"❌ Tag `{tagName}` already exists! Use the `tagdelete` command first.");
 			return;
 		}
 
@@ -235,12 +245,12 @@ public class CommandsModule : ModuleBase<SocketCommandContext>
 
 	[RequireUserPermission(GuildPermission.ManageGuild)]
 	[Command("dataremove")]
-	[Summary("Removes all tags and the server's entry from the settings file.")]
+	[Summary("Delete your server data")]
 	public async Task TagCleanupAsync()
 	{
 		if (Context.Guild == null)
 		{
-			await ReplyAsync("This command must be run in a server.");
+			await ReplyAsync("This is not a server channel.");
 			return;
 		}
 
