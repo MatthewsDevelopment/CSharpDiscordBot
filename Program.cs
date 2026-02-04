@@ -36,6 +36,16 @@ public class Program
 
 		_client.Log += Log;
 		_client.Ready += ClientReady;
+		
+		if (_config.ENABLEWEBSERVER)
+		{
+			_webserver = new Webserver(_config.WEBPORT, _client);
+			_ = Task.Run(() => _webserver.StartAsync());
+		}
+		else
+		{
+			Console.WriteLine("[Webserver] Webserver is disabled in config.");
+		}
 
 		await _client.LoginAsync(TokenType.Bot, _config.DISCORDBOTTOKEN);
 		await _client.StartAsync();
@@ -142,4 +152,6 @@ public class Program
 			Console.WriteLine($"Interaction Exception: {ex.Message}");
 		}
 	}
+
+	private Webserver? _webserver;
 }

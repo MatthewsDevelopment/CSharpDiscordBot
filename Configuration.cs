@@ -5,6 +5,8 @@ public class Configuration
 {
 	public string DISCORDBOTTOKEN { get; set; } = null!; 
 	public string DISCORDBOTPREFIX { get; set; } = null!;
+	public bool ENABLEWEBSERVER { get; set; } = false;
+	public int WEBPORT { get; set; } = 8080;
 
 	public static Configuration Load()
 	{

@@ -2,9 +2,11 @@
 
 CSharp Discord Bot is a free and open sourced Discord bot written in C# that allows you to create tags for your server (similar to what Dyno has). This bot does includes a few other utility and moderation commands. This bot also supports Slash commands and normal prefix commands.
 
+This source code includes a basic webserver that has a simple homepage and a documentation page.
+
 This is my first ever project that is written in C#. This bot uses Discord.NET. This source code is responsible for my Discord bot called M X E S#8129.
 
-This project was tested and confirmed working on Dotnet 7.0 and 8.0. The .csproj file has been set to 7.0. You will need to edit TargetFramework in Program.csproj to use a different Dotnet version.
+This project was tested and confirmed working on Dotnet 8.0.
 
 To use this source code, you need to have the Message content intent enabled for your Discord bot.
 

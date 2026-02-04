@@ -160,7 +160,7 @@ public class InfoSlashGroup : InteractionModuleBase<SocketInteractionContext>
 			.AddField("Invite the Bot", $"https://discord.com/api/oauth2/authorize?client_id={client.CurrentUser.Id}&permissions=0&integration_type=0&scope=bot+applications.commands", true)
 			.AddField("Source Code", "https://codeberg.org/MatthewsDevelopment/CSharpDiscordBot", true);
 		await RespondAsync(embed: embed.Build());
-    }
+	}
 
 	[SlashCommand("server", "Displays information about the current Discord server.")]
 	public async Task ServerInfoAsync()
@@ -188,7 +188,7 @@ public class InfoSlashGroup : InteractionModuleBase<SocketInteractionContext>
 			.WithColor(Color.Blue)
 			.AddField("Bitrate", $"{(channel as IVoiceChannel).Bitrate}", true);
 		await RespondAsync(embed: embed.Build());
-    }
+	}
 }
 
 [Group("mod", "Moderation commands.")]
@@ -198,40 +198,60 @@ public class ModSlashGroup : InteractionModuleBase<SocketInteractionContext>
 	[RequireUserPermission(GuildPermission.ManageGuild)]
 	public async Task TimeOutAsync(SocketGuildUser target, int seconds)
 	{
-		if (Context.Guild == null)
-		{
-			await RespondAsync("This is not a server channel.", ephemeral: true);
-			return;
+		try {
+			if (Context.Guild == null)
+			{
+				await RespondAsync("This is not a server channel.", ephemeral: true);
+				return;
+			}
+			await target.ModifyAsync(u => u.TimedOutUntil = DateTimeOffset.UtcNow.AddSeconds(seconds));
+			await RespondAsync($"{target.Mention} has been timed out for {seconds} seconds.");
 		}
-		await target.ModifyAsync(u => u.TimedOutUntil = DateTimeOffset.UtcNow.AddSeconds(seconds));
-        await RespondAsync($"{target.Mention} has been timed out for {seconds} seconds.");
+		catch (Exception ex)
+		{
+			await RespondAsync($"❌ An error has occurred: `{ex.Message}`", ephemeral: true);
+		}
 	}
 
 	[SlashCommand("ban", "Ban a user")]
 	[RequireUserPermission(GuildPermission.ManageGuild)]
 	public async Task BanUserAsync(SocketGuildUser target, string reason = "No reason provided")
 	{
-		if (Context.Guild == null)
+		try
 		{
-			await RespondAsync("This is not a server channel.", ephemeral: true);
-			return;
+			if (Context.Guild == null)
+			{
+				await RespondAsync("This is not a server channel.", ephemeral: true);
+				return;
+			}
+			await target.BanAsync(0, reason);
+			await RespondAsync($"{target.Mention} has been banned for: {reason}");
 		}
-		await target.BanAsync(0, reason);
-        await RespondAsync($"{target.Mention} has been banned for: {reason}");
+		catch (Exception ex)
+		{
+			await RespondAsync($"❌ An error has occurred: `{ex.Message}`", ephemeral: true);
+		}
 	}
 
 	[SlashCommand("kick", "Kick a user")]
 	[RequireUserPermission(GuildPermission.ManageGuild)]
 	public async Task KickUserAsync(SocketGuildUser target, string reason = "No reason provided")
 	{
-		if (Context.Guild == null)
+		try
 		{
-			await RespondAsync("This is not a server channel.", ephemeral: true);
-			return;
-		}
+			if (Context.Guild == null)
+			{
+				await RespondAsync("This is not a server channel.", ephemeral: true);
+				return;
+			}
 
-		await target.KickAsync(reason);
-        await RespondAsync($"{target.Mention} has been kicked for: {reason}");
+			await target.KickAsync(reason);
+			await RespondAsync($"{target.Mention} has been kicked for: {reason}");
+		}
+		catch (Exception ex)
+		{
+			await RespondAsync($"❌ An error has occurred: `{ex.Message}`", ephemeral: true);
+		}
 	}
 }
 

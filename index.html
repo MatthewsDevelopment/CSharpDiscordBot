@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>{{BotName}}</title>
+	<link rel="icon" href="{{AvatarUrl}}">
+	<style>
+		body {
+			background-color: #0f0f0f;
+			color: #ccc;
+			font-family: 'Segoe UI', Arial, sans-serif;
+			margin: 0;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.nav-bar {
+			width: 100%;
+			background-color: #1a1a1a;
+			padding: 15px 0;
+			display: flex;
+			justify-content: center;
+			border-bottom: 2px solid #333;
+			margin-bottom: 30px;
+		}
+		.nav-bar a {
+			color: MediumOrchid;
+			text-decoration: none;
+			margin: 0 20px;
+			font-weight: bold;
+			transition: 0.3s;
+		}
+		.nav-bar a:hover { color: DarkOrange; }
+
+		.main-container {
+			background-color: #1a1a1a;
+			padding: 40px;
+			border-radius: 15px;
+			box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+			width: 90%;
+			max-width: 600px;
+			border: 1px solid #333;
+			text-align: center;
+		}
+
+		h1, h3 { color: MediumOrchid; margin-top: 0; }
+
+		.form-group {
+			margin-bottom: 20px;
+			text-align: left;
+		}
+		label {
+			display: block;
+			color: MediumOrchid;
+			margin-bottom: 8px;
+			font-weight: bold;
+		}
+		.footer-link { color: DarkOrange; text-decoration: none; font-size: 14px; }
+
+		.avatar {
+			width: 120px;
+			height: 120px;
+			border-radius: 50%;
+			border: 3px solid MediumOrchid;
+			margin-bottom: 20px;
+		}
+		#button_fields {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<nav class="nav-bar">
+		<a href="/">Home</a>
+		<a href="/docs">Documentation</a>
+	</nav>
+
+	<div class="main-container">
+		<h1>{{BotName}}</h1>
+		<img src="{{AvatarUrl}}" alt="Bot Avatar" class="avatar">
+		<p>Discord bot with a tags system and utility commands made in C#.</p>
+		<p>Currently in {{GuildCount}} servers | My Status: {{Status}}</p>
+		<p style="margin-top: 20px;"><a class="footer-link" href="https://discord.com/oauth2/authorize?client_id={{BotId}}&permissions=0&integration_type=0&scope=bot+applications.commands" target="_blank">Invite the Discord Bot</a></p>
+	</div>
+
+	<div style="margin: 30px 0; color: #555; font-size: 14px;">
+		Powered by Discord.Net & .NET Webserver
+	</div>
+</body>
+</html>
