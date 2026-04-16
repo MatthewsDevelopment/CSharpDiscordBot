@@ -58,6 +58,12 @@ public class Webserver
 				await ServeDocs(path, response);
 				return;
 			}
+			if (request.Url.LocalPath == "/fluxer")
+			{
+				byte[] err = Encoding.UTF8.GetBytes("<h1>Fluxer Bot | Coming Soon</h1>");
+				await response.OutputStream.WriteAsync(err, 0, err.Length);
+				return;
+			}
 
 			string content = File.Exists("index.html") ? File.ReadAllText("index.html") : "<h1>404</h1>";
 			byte[] buffer = Encoding.UTF8.GetBytes(content);
@@ -78,7 +84,7 @@ public class Webserver
 	{
 		if (!File.Exists("index.html"))
 		{
-			byte[] err = Encoding.UTF8.GetBytes("<h1>info.html missing</h1>");
+			byte[] err = Encoding.UTF8.GetBytes("<h1>index.html missing</h1>");
 			await response.OutputStream.WriteAsync(err, 0, err.Length);
 			return;
 		}
@@ -112,6 +118,11 @@ public class Webserver
 				discordbot_guilds = _client.Guilds.Count.ToString(),
 				discordbot_latency = _client.Latency,
 				discordbot_status = _client.ConnectionState.ToString()
+			},
+			fluxerbot = new
+			{
+				fluxerbot_name = "N/A",
+				fluxerbot_id = "N/A"
 			},
 			system = new
 			{

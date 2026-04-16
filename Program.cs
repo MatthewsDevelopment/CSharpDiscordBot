@@ -34,6 +34,8 @@ public class Program
 			LogLevel = LogSeverity.Verbose
 		});
 
+		await InitializeServicesAsync();
+
 		_client.Log += Log;
 		_client.Ready += ClientReady;
 		
@@ -47,9 +49,18 @@ public class Program
 			Console.WriteLine("[Webserver] Webserver is disabled in config.");
 		}
 
+		if (_config.ENABLEFLUXERBOT)
+		{
+			var fluxerBot = _services.GetRequiredService<FluxerBot>();
+			_ = Task.Run(() => fluxerBot.StartAsync());
+		}
+		else
+		{
+			Console.WriteLine("[Fluxer] Fluxer bot is disabled in config.");
+		}
+
 		await _client.LoginAsync(TokenType.Bot, _config.DISCORDBOTTOKEN);
 		await _client.StartAsync();
-		await InitializeServicesAsync();
 		await Task.Delay(Timeout.Infinite);
 	}
 
@@ -73,8 +84,10 @@ public class Program
 			.AddSingleton(_config)
 			.AddSingleton(_tagSettings)
 			.AddSingleton(_client)
+			.AddSingleton(_commands)
 			.AddSingleton(commandService) 
 			.AddSingleton<InteractionService>()
+			.AddSingleton<FluxerBot>()
 			.BuildServiceProvider();
 
 		var tagSettingsInstance = _services.GetRequiredService<TagSettings>();
@@ -83,6 +96,7 @@ public class Program
 		await commandService.AddModuleAsync(
 			commandsModuleInstance.GetType(), 
 			_services);
+		await _commands.AddModulesAsync(typeof(Program).Assembly, _services);
             
 		_interactionService = _services.GetRequiredService<InteractionService>();
 		_interactionService.Log += Log;
@@ -125,7 +139,7 @@ public class Program
 			if (result.Error != CommandError.UnknownCommand)
 			{
 				Console.WriteLine($"Command Error: {result.ErrorReason}");
-				await context.Channel.SendMessageAsync($"ERROR: {result.ErrorReason}");
+				await context.Channel.SendMessageAsync($"Something went wrong: {result.ErrorReason}");
 			}
 		}
 	}
@@ -143,7 +157,7 @@ public class Program
 				if (interaction.Type != InteractionType.ApplicationCommand) return;
 				if (!interaction.HasResponded)
 				{
-					await interaction.RespondAsync($"ERROR: {result.ErrorReason}", ephemeral: true);
+					await interaction.RespondAsync($"Something went wrong: {result.ErrorReason}", ephemeral: true);
 				}
 			}
 		}

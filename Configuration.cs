@@ -5,6 +5,9 @@ public class Configuration
 {
 	public string DISCORDBOTTOKEN { get; set; } = null!; 
 	public string DISCORDBOTPREFIX { get; set; } = null!;
+	public string FLUXERBOTTOKEN { get; set; } = null!; 
+	public string FLUXERBOTPREFIX { get; set; } = null!;
+	public bool ENABLEFLUXERBOT { get; set; } = false;
 	public bool ENABLEWEBSERVER { get; set; } = false;
 	public int WEBPORT { get; set; } = 8080;
 

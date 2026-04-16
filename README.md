@@ -6,13 +6,15 @@ This source code includes a basic webserver that has a simple homepage and a doc
 
 This is my first ever project that is written in C#. This bot uses Discord.NET. This source code is responsible for my Discord bot called M X E S#8129.
 
-This project was tested and confirmed working on Dotnet 8.0.
+This project was tested and confirmed working on Dotnet 8.0. To use this source code, you need to have the Message content intent enabled for your Discord bot.
 
-To use this source code, you need to have the Message content intent enabled for your Discord bot.
+This source code includes a Fluxer bot that you can host with the Discord bot. However, the Fluxer bot is currently unfinished.
 
 ## Original Bots:
 
 [Discord Bot](https://discord.com/oauth2/authorize?client_id=1442970367869190287&permissions=0&integration_type=0&scope=bot+applications.commands) - [Discord Server](https://discord.gg/VBJyndbKC2)
+
+[Fluxer Bot](https://web.fluxer.app/oauth2/authorize?client_id=1473476247037043273&scope=bot) - [Fluxer Server](https://fluxer.gg/nsZkMECn)
 
 ## WARNING:
 

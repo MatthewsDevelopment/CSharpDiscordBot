@@ -10,9 +10,13 @@ These commands may help for selfhosting this project on a Linux VPS:
 - dotnet add package Discord.Net.Commands  --version 3.14.0
 - dotnet add package Discord.Net.Interactions  --version 3.14.0
 - dotnet add package Newtonsoft.Json  --version 13.0.3
+- dotnet add package Fluxer.Net --version 1.0.0-alpha15
 - dotnet add package Microsoft.Extensions.DependencyInjection --version 7.0.0
 - dotnet add package System.Net.Http --version 4.3.4
 - dotnet add package Markdig --version 0.44.0
+- dotnet add package Serilog --version 4.0.0
+- dotnet add package Serilog.Sinks.Console --version 6.0.0
+- dotnet add package serilog.sinks.file --version 5.0.0
 - dotnet restore
 - dotnet build
 - dotnet --info
