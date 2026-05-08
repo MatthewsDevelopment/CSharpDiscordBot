@@ -8,6 +8,7 @@ using System.Web;
 using Discord.WebSocket;
 using System.Net.Http;
 using Markdig;
+using System.Runtime.InteropServices;
 
 public class Webserver
 {
@@ -35,6 +36,18 @@ public class Webserver
 		}
 	}
 
+	private async Task<string> GetPublicIpAsync()
+	{
+		try 
+		{
+			return await _httpClient.GetStringAsync("https://api.ipify.org");
+		}
+		catch 
+		{
+			return "Unavailable";
+		}
+	}
+
 	private async Task ProcessRequestAsync(HttpListenerContext context)
 	{
 		var request = context.Request;
@@ -51,6 +64,11 @@ public class Webserver
 			if (request.Url.LocalPath == "/api")
 			{
 				await ServeApiInfo(response);
+				return;
+			}
+			if (path == "/api/network")
+			{
+				await ServeApiNetwork(response);
 				return;
 			}
 			if (path == "/docs" || path.StartsWith("/docs/"))
@@ -133,6 +151,7 @@ public class Webserver
 					discordnet_interactions_version = interactionAssembly?.ToString()
 				},
 				osplatform = System.Runtime.InteropServices.RuntimeInformation.OSDescription,
+				architecture = RuntimeInformation.OSArchitecture.ToString(),
 				servertime = DateTime.UtcNow.ToString("o")
 			}
 		};
@@ -141,6 +160,22 @@ public class Webserver
 		byte[] buffer = Encoding.UTF8.GetBytes(json);
 		response.ContentType = "application/json";
 		response.StatusCode = (int)HttpStatusCode.OK;
+		await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
+	}
+
+	private async Task ServeApiNetwork(HttpListenerResponse response)
+	{
+		string publicIp = await GetPublicIpAsync();
+		var netResponse = new
+		{
+			publicip = publicIp,
+			port = _port,
+			url = $"{publicIp}:{_port}"
+		};
+
+		string json = Newtonsoft.Json.JsonConvert.SerializeObject(netResponse, Newtonsoft.Json.Formatting.Indented);
+		byte[] buffer = Encoding.UTF8.GetBytes(json);
+		response.ContentType = "application/json";
 		await response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
 	}
 

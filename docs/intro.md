@@ -1,7 +1,5 @@
 # M X E S
 
-M X E S is a Discord bot that allows you to create tags for your server like what Dyno has but is 100% free and open sourced. The bot also includes some utility commands that servers can use.
+M X E S is a Discord and Fluxer bot that allows you to create tags for your server like what Dyno has but is 100% free and open sourced. The bot also includes some utility commands that servers can use.
 
-This bot supports both slash commands and prefix based commands.
-
-We are currently working on the fluxer bot with the source code. The Fluxer bot that is in the source code is unfinished.
+The Discord bot supports both slash commands and prefix based commands.
